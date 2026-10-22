@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Réplique — party game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="lobby.css" />
+  <link rel="stylesheet" href="round.css" />
+  <link rel="stylesheet" href="vote.css" />
+  <link rel="stylesheet" href="review.css" />
+  <link rel="stylesheet" href="review-video.css" />
+  <link rel="stylesheet" href="score.css" />
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar"><a class="brand" href="#"><span class="brand-mark">R</span>RÉPLIQUE</a><span class="version">BÊTA / 01</span></nav>
+    <section class="hero"><div class="eyebrow"><span class="dot"></span> PARTY GAME / SOUS-TITRES IMPROBABLES</div><h1>Le cinéma.<br><em>À ta façon.</em></h1><p class="intro">Détourne les scènes cultes avec tes amis.<br>La meilleure punchline remporte la manche.</p></section>
+
+    <section class="game-panel" id="homePanel" aria-label="Créer ou rejoindre une partie">
+      <div class="panel-heading"><span class="step">01 / 02</span><h2>Choisis ton mode de jeu</h2></div>
+      <div class="actions">
+        <article class="action-card featured"><div class="card-top"><span class="card-number">01</span><span class="arrow">↗</span></div><h3>Créer une partie</h3><p>Lance une room privée et invite tes amis avec un code unique.</p><button class="primary" id="createButton">Lancer la partie <span>→</span></button></article>
+        <article class="action-card"><div class="card-top"><span class="card-number">02</span><span class="arrow">↗</span></div><h3>Rejoindre</h3><p>Entre le code partagé par le joueur qui a créé la room.</p><form id="joinForm" class="join-form"><label for="roomCode">Code de la partie</label><div class="join-row"><input id="roomCode" maxlength="6" placeholder="ex. RIRE42" autocomplete="off" /><button class="secondary" type="submit">Entrer <span>→</span></button></div></form></article>
+      </div><div class="notice" id="notice" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="lobby-panel game-panel" id="lobbyPanel" hidden aria-label="Salle d'attente">
+      <div class="lobby-head"><div><span class="step">SALLE D’ATTENTE</span><h2>Les joueurs arrivent…</h2></div><button class="ghost-button" id="leaveButton">← Quitter</button></div>
+      <div class="room-code"><span>CODE DE LA PARTIE</span><strong id="lobbyCode">RIRE42</strong><button id="copyCode" title="Copier le code">⧉</button></div>
+      <div class="players-head"><span>JOUEURS CONNECTÉS</span><span id="playerCount">1 / 8</span></div>
+      <div class="players-list" id="playersList"><div class="player-row"><span class="avatar">TOI</span><span class="player-name">Joueur anonyme</span><span class="host-badge">HÔTE</span></div><div class="empty-player">Envoie le code à tes amis pour remplir la salle…</div></div>
+      <div class="lobby-actions"><p><span class="pulse"></span> En attente des joueurs</p><button class="primary start-button" id="startButton">Commencer la manche <span>→</span></button></div>
+    </section>
+
+    <section class="round-panel game-panel" id="roundPanel" hidden aria-label="Manche en cours">
+      <div class="round-head"><div><span class="step" id="roundLabel">MANCHE 01 / 05</span><h2>À toi de doubler la scène</h2></div><div class="timer" id="timer">01:50</div></div>
+      <div class="video-wrapper"><video id="movieClip" autoplay playsinline><source src="https://upload.wikimedia.org/wikipedia/commons/3/31/Speak_Easily_%281932%29.webm" type="video/webm">Ton navigateur ne peut pas lire cette vidéo.</video><div class="subtitle-preview" id="subtitlePreview">Ton sous-titre apparaîtra ici</div><span class="demo-label" id="clipLabel">SPEAK EASILY / EXTRAIT 01 / 20 SEC</span></div>
+      <form id="subtitleForm" class="subtitle-form"><div class="input-meta"><label for="subtitleInput">TA MEILLEURE RÉPLIQUE</label><span id="characterCount">0 / 80</span></div><div class="subtitle-row"><input id="subtitleInput" maxlength="80" placeholder="Écris ce que le personnage pense vraiment…" autocomplete="off" required><button class="primary" type="submit">Envoyer <span>→</span></button></div></form>
+      <div class="round-status" id="roundStatus"><span class="pulse"></span> Les autres joueurs écrivent leur réplique… <strong>1 / 1 prêt</strong></div>
+    </section>
+
+    <section class="vote-panel game-panel" id="votePanel" hidden aria-label="Vote des sous-titres">
+      <div class="round-head"><div><span class="step">MANCHE 01 / 05</span><h2>Vote pour la meilleure réplique</h2></div><div class="vote-timer" id="voteTimer">00:20</div></div>
+      <p class="vote-intro">Les réponses sont anonymes. Choisis celle qui t’a fait le plus rire.</p>
+      <div class="vote-list" id="voteList"></div>
+      <div class="vote-result" id="voteResult" hidden></div><button class="primary next-round" id="nextRoundButton" hidden>Round suivant <span>→</span></button>
+    </section>
+
+    <section class="score-panel game-panel" id="scorePanel" hidden aria-label="Résultats finaux">
+      <span class="step">PARTIE TERMINÉE</span><h2>Le podium des meilleurs sous-titres</h2><p class="vote-intro">Après 5 rounds, voici les joueurs qui ont fait le plus rire la salle.</p><div class="podium" id="podium"></div><button class="primary" id="restartButton">Rejouer une partie <span>↗</span></button>
+    </section>
+
+    <section class="review-panel game-panel" id="reviewPanel" hidden aria-label="Présentation des réponses">
+      <div class="round-head"><div><span class="step">PRÉSENTATION DES RÉPLIQUES</span><h2>Découvrez les réponses</h2></div><div class="review-counter" id="reviewCounter">1 / 4</div></div>
+      <p class="vote-intro">Les réponses passent une par une. Garde bien ta préférée en tête : le vote arrive juste après.</p>
+      <div class="review-video-wrapper"><video id="reviewVideo" autoplay playsinline><source src="https://upload.wikimedia.org/wikipedia/commons/3/31/Speak_Easily_%281932%29.webm" type="video/webm"></video><div class="review-subtitle-overlay" id="reviewSubtitle">« Quand tu dis que tu arrives dans 5 minutes »</div><span class="demo-label" id="reviewClipLabel">EXTRAIT / 10 SEC</span></div>
+      <div class="review-card"><span class="review-label" id="reviewPlayer">JOUEUR ANONYME</span></div>
+      <button class="primary next-review" id="nextReview">Réponse suivante <span>→</span></button>
+    </section>
+    <footer><span>Prêt à détourner le cinéma&nbsp;?</span><span>© RÉPLIQUE 2026</span></footer>
+  </main>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
